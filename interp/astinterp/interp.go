@@ -1,7 +1,8 @@
-package interp
+package astinterp
 
 import (
 	"fmt"
+	"sus/interp"
 	"sus/interp/val"
 	"sus/syntax/parsing/propexpr"
 	"sus/syntax/parsing/valexpr"
@@ -10,7 +11,7 @@ import (
 // Attempts to find a solution to the `propExpr` using values and holes provided in `vals`.
 // Value passed to `vals` is considered to be "moved" and should not be used after calling this function.
 // The function might mutate `vals` value and/or return it as a query result.
-func Query(propExpr propexpr.PropExpr, vals Solution) Solution {
+func Query(propExpr propexpr.PropExpr, vals interp.Solution) interp.Solution {
 	switch l := propExpr.(type) {
 	case propexpr.True:
 		return vals
@@ -69,7 +70,7 @@ func Query(propExpr propexpr.PropExpr, vals Solution) Solution {
 }
 
 // If expression is GetVar (@0), returns an lvalue (pointer to an nil value) that can be assigned
-func evalValExpr(expr valexpr.ValExpr, vals Solution) *val.Val {
+func evalValExpr(expr valexpr.ValExpr, vals interp.Solution) *val.Val {
 	switch expr := expr.(type) {
 	case valexpr.GetVar:
 		return &vals[expr.VarNum()]

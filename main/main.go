@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"sus/interp"
+	"sus/interp/astinterp"
 	"sus/interp/val"
 	"sus/syntax/parsing"
 	"sus/syntax/parsing/propexpr"
@@ -21,7 +21,7 @@ func example2() {
 
 	vals := []val.Val{val.NewInt(100), nil}
 	expr := parsing.DefaultParser().Parse("@0 = @1").(propexpr.PropExpr)
-	solution := interp.Query(expr, vals)
+	solution := astinterp.Query(expr, vals)
 
 	fmt.Println(solution)
 }

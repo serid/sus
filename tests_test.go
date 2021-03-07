@@ -3,6 +3,7 @@ package sus
 import (
 	"errors"
 	"sus/interp"
+	"sus/interp/astinterp"
 	"sus/interp/val"
 	mytesting "sus/stuff/testing"
 	"sus/syntax/cmp"
@@ -119,7 +120,7 @@ func TestInterpreter5(t *testing.T) {
 
 func testInterpreter(vals interp.Solution, expectedOutput interp.Solution, s string, t *testing.T) {
 	expr := parsing.DefaultParser().Parse(s).(propexpr.PropExpr)
-	solution := interp.Query(expr, vals)
+	solution := astinterp.Query(expr, vals)
 
 	mytesting.AssertEqF(solution, expectedOutput, interp.ArrayCmp, t)
 }
