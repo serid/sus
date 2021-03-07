@@ -33,34 +33,34 @@ func Query(propExpr propexpr.PropExpr, vals val.Array) val.Array {
 		if *val1 == *val2 {
 			return vals
 		} else {
-			return val.NewArray(nil)
+			return nil
 		}
 	case propexpr.Conjunction:
 		var success1 = Query(l.E1(), vals)
 
-		if success1.IsSome() {
+		if success1 != nil {
 			var success2 = Query(l.E2(), success1)
 
-			if success2.IsSome() {
+			if success2 != nil {
 				return success2
 			} else {
-				return val.NewArray(nil)
+				return nil
 			}
 		} else {
-			return val.NewArray(nil)
+			return nil
 		}
 	case propexpr.Disjunction:
 		var success1 = Query(l.E1(), vals.Clone())
 
-		if success1.IsSome() {
+		if success1 != nil {
 			return success1
 		} else {
 			var success2 = Query(l.E2(), vals)
 
-			if success2.IsSome() {
+			if success2 != nil {
 				return success2
 			} else {
-				return val.NewArray(nil)
+				return nil
 			}
 		}
 	default:
@@ -72,7 +72,7 @@ func Query(propExpr propexpr.PropExpr, vals val.Array) val.Array {
 func evalValExpr(expr valexpr.ValExpr, vals val.Array) *val.Val {
 	switch expr := expr.(type) {
 	case valexpr.GetVar:
-		return &vals.Vals()[expr.VarNum()]
+		return &vals[expr.VarNum()]
 	case valexpr.IntLit:
 		var v val.Val = val.NewInt(expr.Data())
 		return &v
