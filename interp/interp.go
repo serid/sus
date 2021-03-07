@@ -68,12 +68,43 @@ func Query(propExpr propexpr.PropExpr, vals val.Array) val.Array {
 	}
 }
 
+// If expression is GetVar (@0), returns an lvalue (pointer to an nil value) that can be assigned
 func evalValExpr(expr valexpr.ValExpr, vals val.Array) *val.Val {
 	switch expr := expr.(type) {
 	case valexpr.GetVar:
 		return &vals.Vals()[expr.VarNum()]
 	case valexpr.IntLit:
 		var v val.Val = val.NewInt(expr.Data())
+		return &v
+	case valexpr.Plus:
+		var v1 = *evalValExpr(expr.E1(), vals)
+		if v1 == nil {
+			panic("using unset variables in arithmetic expressions is unsupported")
+		}
+		var vi1 = v1.(val.Int)
+
+		var v2 = *evalValExpr(expr.E2(), vals)
+		if v2 == nil {
+			panic("using unset variables in arithmetic expressions is unsupported")
+		}
+		var vi2 = v2.(val.Int)
+
+		var v val.Val = val.NewInt(vi1.Value() + vi2.Value())
+		return &v
+	case valexpr.Mul:
+		var v1 = *evalValExpr(expr.E1(), vals)
+		if v1 == nil {
+			panic("using unset variables in arithmetic expressions is unsupported")
+		}
+		var vi1 = v1.(val.Int)
+
+		var v2 = *evalValExpr(expr.E2(), vals)
+		if v2 == nil {
+			panic("using unset variables in arithmetic expressions is unsupported")
+		}
+		var vi2 = v2.(val.Int)
+
+		var v val.Val = val.NewInt(vi1.Value() * vi2.Value())
 		return &v
 	default:
 		panic(fmt.Sprintf("Unhandled ValExpr: %#v.", expr))

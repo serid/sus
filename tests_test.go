@@ -111,6 +111,12 @@ func TestInterpreter4(t *testing.T) {
 	testInterpreter(input, expectedOutput, "1 = 2 \\/ 50 = @0", t)
 }
 
+func TestInterpreter5(t *testing.T) {
+	input := []val.Val{nil}
+	expectedOutput := []val.Val{val.NewInt(3)}
+	testInterpreter(input, expectedOutput, "@0 = 1 + 2", t)
+}
+
 func testInterpreter(vals []val.Val, expectedOutput []val.Val, s string, t *testing.T) {
 	valArray := val.NewArray(vals)
 	expr := parsing.DefaultParser().Parse(s).(propexpr.PropExpr)
