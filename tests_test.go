@@ -88,35 +88,35 @@ func TestParser1F(t *testing.T) {
 //}
 
 func TestInterpreter1(t *testing.T) {
-	input := []val.Option{val.NewOption(val.NewInt(100)), val.NewOption(nil)}
-	expectedOutput := []val.Option{val.NewOption(val.NewInt(100)), val.NewOption(val.NewInt(100))}
+	input := []val.Val{val.NewInt(100), nil}
+	expectedOutput := []val.Val{val.NewInt(100), val.NewInt(100)}
 	testInterpreter(input, expectedOutput, "@0 = @1", t)
 }
 
 func TestInterpreter2(t *testing.T) {
-	input := []val.Option{val.NewOption(nil)}
-	expectedOutput := []val.Option{val.NewOption(val.NewInt(124))}
+	input := []val.Val{nil}
+	expectedOutput := []val.Val{val.NewInt(124)}
 	testInterpreter(input, expectedOutput, "@0 = 124", t)
 }
 
 func TestInterpreter3(t *testing.T) {
-	input := []val.Option{val.NewOption(val.NewInt(100)), val.NewOption(nil), val.NewOption(nil)}
-	expectedOutput := []val.Option{val.NewOption(val.NewInt(100)), val.NewOption(val.NewInt(100)), val.NewOption(val.NewInt(100))}
+	input := []val.Val{val.NewInt(100), nil, nil}
+	expectedOutput := []val.Val{val.NewInt(100), val.NewInt(100), val.NewInt(100)}
 	testInterpreter(input, expectedOutput, "@0 = @1 /\\ @1 = @2", t)
 }
 
 func TestInterpreter4(t *testing.T) {
-	input := []val.Option{val.NewOption(nil)}
-	expectedOutput := []val.Option{val.NewOption(val.NewInt(50))}
+	input := []val.Val{nil}
+	expectedOutput := []val.Val{val.NewInt(50)}
 	testInterpreter(input, expectedOutput, "1 = 2 \\/ 50 = @0", t)
 }
 
-func testInterpreter(opts []val.Option, expectedOutput []val.Option, s string, t *testing.T) {
-	optArray := val.NewOptArray(opts)
+func testInterpreter(vals []val.Val, expectedOutput []val.Val, s string, t *testing.T) {
+	valArray := val.NewArray(vals)
 	expr := parsing.DefaultParser().Parse(s).(propexpr.PropExpr)
-	solution := interp.Query(expr, optArray)
+	solution := interp.Query(expr, valArray)
 
-	mytesting.AssertEqF(solution, val.NewOptArray(expectedOutput), val.OptArrayCmp, t)
+	mytesting.AssertEqF(solution, val.NewArray(expectedOutput), val.ArrayCmp, t)
 }
 
 func TestPrefixRunes(t *testing.T) {

@@ -7,36 +7,36 @@ import (
 	"sus/syntax/parsing/valexpr"
 )
 
-// Attempts to find a solution to the `propExpr` using values and holes provided in `opts`.
-// Value passed to `opts` is considered to be "moved" and should not be used after calling this function.
-// The function might mutate `opts` value and/or return it as a query result.
-func Query(propExpr propexpr.PropExpr, opts val.OptArray) val.OptArray {
+// Attempts to find a solution to the `propExpr` using values and holes provided in `vals`.
+// Value passed to `vals` is considered to be "moved" and should not be used after calling this function.
+// The function might mutate `vals` value and/or return it as a query result.
+func Query(propExpr propexpr.PropExpr, vals val.Array) val.Array {
 	switch l := propExpr.(type) {
 	case propexpr.True:
-		return opts
+		return vals
 	case propexpr.Unification:
-		var val1 = evalValExpr(l.E1(), opts)
-		var val2 = evalValExpr(l.E2(), opts)
+		var val1 = evalValExpr(l.E1(), vals)
+		var val2 = evalValExpr(l.E2(), vals)
 
 		// If one of args to Unification is nil, copy value overwriting None
 
-		if val1.IsNone() {
-			val1.SetData(val2.Unwrap())
-			return opts
+		if *val1 == nil {
+			*val1 = *val2
+			return vals
 		}
-		if val2.IsNone() {
-			val2.SetData(val1.Unwrap())
-			return opts
+		if *val2 == nil {
+			*val2 = *val1
+			return vals
 		}
 
 		// If Values in expressions are equal, return true, otherwise false
-		if val1.Unwrap() == val2.Unwrap() {
-			return opts
+		if *val1 == *val2 {
+			return vals
 		} else {
-			return val.NewOptArray(nil)
+			return val.NewArray(nil)
 		}
 	case propexpr.Conjunction:
-		var success1 = Query(l.E1(), opts)
+		var success1 = Query(l.E1(), vals)
 
 		if success1.IsSome() {
 			var success2 = Query(l.E2(), success1)
@@ -44,23 +44,23 @@ func Query(propExpr propexpr.PropExpr, opts val.OptArray) val.OptArray {
 			if success2.IsSome() {
 				return success2
 			} else {
-				return val.NewOptArray(nil)
+				return val.NewArray(nil)
 			}
 		} else {
-			return val.NewOptArray(nil)
+			return val.NewArray(nil)
 		}
 	case propexpr.Disjunction:
-		var success1 = Query(l.E1(), opts.Clone())
+		var success1 = Query(l.E1(), vals.Clone())
 
 		if success1.IsSome() {
 			return success1
 		} else {
-			var success2 = Query(l.E2(), opts)
+			var success2 = Query(l.E2(), vals)
 
 			if success2.IsSome() {
 				return success2
 			} else {
-				return val.NewOptArray(nil)
+				return val.NewArray(nil)
 			}
 		}
 	default:
@@ -68,12 +68,12 @@ func Query(propExpr propexpr.PropExpr, opts val.OptArray) val.OptArray {
 	}
 }
 
-func evalValExpr(expr valexpr.ValExpr, opts val.OptArray) *val.Option {
+func evalValExpr(expr valexpr.ValExpr, vals val.Array) *val.Val {
 	switch expr := expr.(type) {
 	case valexpr.GetVar:
-		return &opts.Options()[expr.VarNum()]
+		return &vals.Vals()[expr.VarNum()]
 	case valexpr.IntLit:
-		v := val.NewOption(val.NewInt(expr.Data()))
+		var v val.Val = val.NewInt(expr.Data())
 		return &v
 	default:
 		panic(fmt.Sprintf("Unhandled ValExpr: %#v.", expr))
