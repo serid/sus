@@ -114,10 +114,9 @@ func TestInterpreter4(t *testing.T) {
 func testInterpreter(opts []val.Option, expectedOutput []val.Option, s string, t *testing.T) {
 	optArray := val.NewOptArray(opts)
 	expr := parsing.DefaultParser().Parse(s).(propexpr.PropExpr)
-	b := interp.Query(expr, optArray)
+	solution := interp.Query(expr, optArray)
 
-	mytesting.AssertEq(b, true, t)
-	mytesting.AssertEqF(optArray, val.NewOptArray(expectedOutput), val.OptArrayCmp, t)
+	mytesting.AssertEqF(solution, val.NewOptArray(expectedOutput), val.OptArrayCmp, t)
 }
 
 func TestPrefixRunes(t *testing.T) {

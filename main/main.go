@@ -21,9 +21,7 @@ func example2() {
 
 	opts := val.NewOptArray([]val.Option{val.NewOption(val.NewInt(100)), val.NewOption(nil)})
 	expr := parsing.DefaultParser().Parse("@0 = @1").(propexpr.PropExpr)
-	b := interp.Query(expr, opts)
+	solution := interp.Query(expr, opts)
 
-	fmt.Println(opts)
-
-	fmt.Println(b)
+	fmt.Println(solution)
 }

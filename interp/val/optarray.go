@@ -14,6 +14,14 @@ func (opt OptArray) Options() []Option {
 	return opt.options
 }
 
+func (opt OptArray) IsNone() bool {
+	return opt.options == nil
+}
+
+func (opt OptArray) IsSome() bool {
+	return opt.options != nil
+}
+
 func (opt OptArray) Clone() OptArray {
 	newOptArray := OptArray{options: make([]Option, len(opt.options))}
 
