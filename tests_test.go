@@ -117,11 +117,11 @@ func TestInterpreter5(t *testing.T) {
 	testInterpreter(input, expectedOutput, "@0 = 1 + 2", t)
 }
 
-func testInterpreter(vals val.Array, expectedOutput val.Array, s string, t *testing.T) {
+func testInterpreter(vals interp.Solution, expectedOutput interp.Solution, s string, t *testing.T) {
 	expr := parsing.DefaultParser().Parse(s).(propexpr.PropExpr)
 	solution := interp.Query(expr, vals)
 
-	mytesting.AssertEqF(solution, expectedOutput, val.ArrayCmp, t)
+	mytesting.AssertEqF(solution, expectedOutput, interp.ArrayCmp, t)
 }
 
 func TestPrefixRunes(t *testing.T) {

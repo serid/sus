@@ -10,7 +10,7 @@ import (
 // Attempts to find a solution to the `propExpr` using values and holes provided in `vals`.
 // Value passed to `vals` is considered to be "moved" and should not be used after calling this function.
 // The function might mutate `vals` value and/or return it as a query result.
-func Query(propExpr propexpr.PropExpr, vals val.Array) val.Array {
+func Query(propExpr propexpr.PropExpr, vals Solution) Solution {
 	switch l := propExpr.(type) {
 	case propexpr.True:
 		return vals
@@ -69,7 +69,7 @@ func Query(propExpr propexpr.PropExpr, vals val.Array) val.Array {
 }
 
 // If expression is GetVar (@0), returns an lvalue (pointer to an nil value) that can be assigned
-func evalValExpr(expr valexpr.ValExpr, vals val.Array) *val.Val {
+func evalValExpr(expr valexpr.ValExpr, vals Solution) *val.Val {
 	switch expr := expr.(type) {
 	case valexpr.GetVar:
 		return &vals[expr.VarNum()]
