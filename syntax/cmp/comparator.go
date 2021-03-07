@@ -1,6 +1,7 @@
 package cmp
 
 import (
+	"fmt"
 	"sus/syntax/parsing/propexpr"
 	"sus/syntax/parsing/valexpr"
 )
@@ -21,7 +22,7 @@ func Cmp(a, b interface{}) bool {
 		}
 		return ValExpr(a1, b1)
 	default:
-		panic("Unhandled arg in Cmp.")
+		panic(fmt.Sprintf("unhandled arg in `Cmp`: %#v", a))
 	}
 }
 
