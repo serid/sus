@@ -19,7 +19,7 @@ func example1() {
 func example2() {
 	fmt.Println("Hello world!")
 
-	vals := val.NewArray([]val.Val{val.NewInt(100), nil})
+	vals := []val.Val{val.NewInt(100), nil}
 	expr := parsing.DefaultParser().Parse("@0 = @1").(propexpr.PropExpr)
 	solution := interp.Query(expr, vals)
 
