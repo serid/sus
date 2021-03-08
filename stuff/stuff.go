@@ -1,6 +1,8 @@
 package stuff
 
-import "reflect"
+import (
+	"reflect"
+)
 
 func Unwrap(err error) {
 	if err != nil {
@@ -26,12 +28,16 @@ func CanBeNil(value reflect.Value) bool {
 		k == reflect.Slice
 }
 
-func Catch(f func() interface{}) (p interface{}) {
+func Catch(f func() interface{}) (r interface{}) {
 	defer func() {
-		p = recover()
+		// catch panic and save it in r
+		pnc := recover()
+		if pnc != nil {
+			r = pnc
+		}
 	}()
 
-	ok := f()
+	r = f()
 
-	return ok
+	return
 }
