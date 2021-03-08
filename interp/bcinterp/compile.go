@@ -111,7 +111,7 @@ func compileValExpr(expr valexpr.ValExpr, context bytecode.SlotNum, body *[]byte
 		*body = append(*body, bytecode.Add(context, input1, input2, output))
 		return cs2.SkipVar()
 	case valexpr.GetVar:
-		*body = append(*body, bytecode.PutVarNum(context, bytecode.VarNum(pExpr.VarNum()), cs.NextVarNum))
+		*body = append(*body, bytecode.PutVarNum(context, pExpr.VarNum(), cs.NextVarNum))
 		return cs.SkipVar()
 	default:
 		panic("unsupported valexpr")
