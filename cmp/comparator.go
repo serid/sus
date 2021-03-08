@@ -3,6 +3,7 @@ package cmp
 import (
 	"fmt"
 	"strings"
+	"sus/interp/bcinterp/bytecode"
 	"sus/stuff"
 	"sus/syntax/parsing/propexpr"
 	"sus/syntax/parsing/valexpr"
@@ -51,6 +52,18 @@ func Cmp(a, b interface{}) bool {
 				return false
 			}
 			return ValExpr(a1, b1)
+		case bytecode.Op:
+			b1, ok := b.(bytecode.Op)
+			if !ok {
+				return false
+			}
+			return a1.OpCode == b1.OpCode && Cmp(a1.Data, b1.Data)
+		case bytecode.SolRuleCallData:
+			b1, ok := b.(bytecode.SolRuleCallData)
+			if !ok {
+				return false
+			}
+			return a1.Rid == b1.Rid && a1.Output == b1.Output && Cmp(a1.Output, b1.Output)
 		default:
 			panic(fmt.Sprintf("unhandled arg in `Cmp`: %#v", a))
 		}
