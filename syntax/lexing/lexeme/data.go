@@ -1,6 +1,8 @@
 package lexeme
 
-import "sus/types"
+import (
+	"sus/interp/bcinterp/bytecode"
+)
 
 // Data structures for lexemes like Int or At
 
@@ -19,12 +21,12 @@ func (i IntData) Data() int {
 }
 
 type AtData struct {
-	data types.VarNum
+	data bytecode.VarNum
 }
 
 func (AtData) tagData() {}
 
-func (at AtData) Data() types.VarNum {
+func (at AtData) Data() bytecode.VarNum {
 	return at.data
 }
 

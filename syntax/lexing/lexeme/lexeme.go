@@ -2,7 +2,7 @@ package lexeme
 
 import (
 	"fmt"
-	"sus/types"
+	"sus/interp/bcinterp/bytecode"
 )
 
 type Kind byte
@@ -82,7 +82,7 @@ func Int(i int) Lexeme {
 	return Lexeme{kind: KindInt, data: IntData{data: i}}
 }
 
-func At(i types.VarNum) Lexeme {
+func At(i bytecode.VarNum) Lexeme {
 	return Lexeme{kind: KindAt, data: AtData{data: i}}
 }
 

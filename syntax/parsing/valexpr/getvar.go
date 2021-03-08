@@ -1,19 +1,19 @@
 package valexpr
 
 import (
-	"sus/types"
+	"sus/interp/bcinterp/bytecode"
 )
 
 type GetVar struct {
-	varnum types.VarNum
+	varnum bytecode.VarNum
 }
 
 func (GetVar) tagValExpr() {}
 
-func NewGetVar(varnum types.VarNum) GetVar {
+func NewGetVar(varnum bytecode.VarNum) GetVar {
 	return GetVar{varnum: varnum}
 }
 
-func (gv GetVar) VarNum() types.VarNum {
+func (gv GetVar) VarNum() bytecode.VarNum {
 	return gv.varnum
 }

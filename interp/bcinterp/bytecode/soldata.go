@@ -1,9 +1,5 @@
 package bytecode
 
-import (
-	"sus/types"
-)
-
 // Data for Operations operating on solutions
 
 type SolCloneSolutionData struct {
@@ -57,9 +53,9 @@ func (SolBinOpData) tagData() {}
 
 type SolRuleCallData struct {
 	Context SlotNum
-	Rid    types.RuleId
-	Input  []VarNum
-	Output SlotNum
+	Rid     RuleId
+	Input   []VarNum
+	Output  SlotNum
 }
 
 func (SolRuleCallData) tagData() {}

@@ -7,14 +7,6 @@ type Op struct {
 
 type OpCode int
 
-// Slot is a register containing a solution
-// Slot Number
-type SlotNum int
-
-// Variable is a register containing a value
-// Variable Number
-type VarNum int
-
 const (
 	OpInvalid OpCode = iota
 	OpCloneSolution
@@ -29,3 +21,14 @@ const (
 	OpPutVarNum
 	OpAdd
 )
+
+// Slot is a register containing a solution
+// Slot Number
+type SlotNum int
+
+// Variable is a register containing a value
+// Variable Number
+type VarNum int
+
+// id of a rule, mapped from a name
+type RuleId int

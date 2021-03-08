@@ -1,9 +1,5 @@
 package bytecode
 
-import (
-	"sus/types"
-)
-
 func CloneSolution(input, output SlotNum) Op {
 	return Op{OpCode: OpCloneSolution, Data: SolCloneSolutionData{
 		Input: input,
@@ -50,7 +46,7 @@ func DisjunctionPart2(input1, input2, output SlotNum) Op {
 	}}
 }
 
-func RuleCall(context SlotNum, rid types.RuleId, input []VarNum, output SlotNum) Op {
+func RuleCall(context SlotNum, rid RuleId, input []VarNum, output SlotNum) Op {
 	return Op{OpCode: OpRuleCall, Data: SolRuleCallData{
 		Context: context,
 		Rid: rid,

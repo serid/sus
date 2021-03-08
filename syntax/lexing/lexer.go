@@ -1,9 +1,9 @@
 package lexing
 
 import (
+	"sus/interp/bcinterp/bytecode"
 	"sus/stuff"
 	"sus/syntax/lexing/lexeme"
-	"sus/types"
 	"unicode"
 )
 
@@ -28,7 +28,7 @@ func LexateE(s1 string) ([]lexeme.Lexeme, error) {
 					n += int(s[i]) - '0'
 					i++
 				}
-				result = append(result, lexeme.At(types.VarNum(n)))
+				result = append(result, lexeme.At(bytecode.VarNum(n)))
 			} else {
 				panic("'@' should be followed by a number")
 			}
