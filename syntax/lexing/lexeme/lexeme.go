@@ -26,76 +26,68 @@ const (
 )
 
 type Lexeme struct {
-	kind Kind
-	data Data
-}
-
-func (l Lexeme) Kind() Kind {
-	return l.kind
-}
-
-func (l Lexeme) Data() Data {
-	return l.data
+	Kind Kind
+	Data Data
 }
 
 func Plus() Lexeme {
-	return Lexeme{kind: KindPlus, data: nil}
+	return Lexeme{Kind: KindPlus, Data: nil}
 }
 
 func Asterisk() Lexeme {
-	return Lexeme{kind: KindAsterisk, data: nil}
+	return Lexeme{Kind: KindAsterisk, Data: nil}
 }
 
 func Comma() Lexeme {
-	return Lexeme{kind: KindComma, data: nil}
+	return Lexeme{Kind: KindComma, Data: nil}
 }
 
 func Equal() Lexeme {
-	return Lexeme{kind: KindEqual, data: nil}
+	return Lexeme{Kind: KindEqual, Data: nil}
 }
 
 func RuleCall() Lexeme {
-	return Lexeme{kind: KindRuleCall, data: nil}
+	return Lexeme{Kind: KindRuleCall, Data: nil}
 }
 
 func Conj() Lexeme {
-	return Lexeme{kind: KindConj, data: nil}
+	return Lexeme{Kind: KindConj, Data: nil}
 }
 
 func Disj() Lexeme {
-	return Lexeme{kind: KindDisj, data: nil}
+	return Lexeme{Kind: KindDisj, Data: nil}
 }
 
 func ParenL() Lexeme {
-	return Lexeme{kind: KindParenL, data: nil}
+	return Lexeme{Kind: KindParenL, Data: nil}
 }
 
 func ParenR() Lexeme {
-	return Lexeme{kind: KindParenR, data: nil}
+	return Lexeme{Kind: KindParenR, Data: nil}
 }
 
 func Unit() Lexeme {
-	return Lexeme{kind: KindUnit, data: nil}
+	return Lexeme{Kind: KindUnit, Data: nil}
 }
 
 func Int(i int) Lexeme {
-	return Lexeme{kind: KindInt, data: IntData{data: i}}
+	return Lexeme{Kind: KindInt, Data: IntData{Data: i}}
 }
 
 func At(i bytecode.VarNum) Lexeme {
-	return Lexeme{kind: KindAt, data: AtData{data: i}}
+	return Lexeme{Kind: KindAt, Data: AtData{Data: i}}
 }
 
 func Ident(s string) Lexeme {
-	return Lexeme{kind: KindIdent, data: IdentData{data: s}}
+	return Lexeme{Kind: KindIdent, Data: IdentData{Data: s}}
 }
 
 func Any() Lexeme {
-	return Lexeme{kind: KindAny, data: nil}
+	return Lexeme{Kind: KindAny, Data: nil}
 }
 
 func (l Lexeme) IsOperatorLexeme() bool {
-	switch l.kind {
+	switch l.Kind {
 	case KindUnit, KindInt, KindAt, KindIdent:
 		return false
 	case KindPlus, KindAsterisk, KindComma, KindEqual, KindRuleCall, KindConj, KindDisj:
@@ -114,7 +106,7 @@ func (l Lexeme) IsValBorderLexeme() bool {
 		return false
 	}
 
-	switch l.kind {
+	switch l.Kind {
 	case KindParenL, KindParenR:
 		return false
 	case KindInt, KindAt, KindUnit, KindIdent:
@@ -140,7 +132,7 @@ func (l Lexeme) IsValOrPropOperatorLexeme() OperatorType {
 		panic("Attempted to query if a non-operator lexeme is a val or prop operator.")
 	}
 
-	switch l.kind {
+	switch l.Kind {
 	case KindPlus, KindAsterisk, KindComma, KindEqual:
 		return TypeVal
 	case KindConj, KindDisj:

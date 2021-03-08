@@ -12,43 +12,35 @@ import (
 // `lexeme.IdentData` for an ident
 // `valexpr.CommaListNode` for a CommaListNode // It has a separate kind to differentiate it from other valexpr-s
 type OutStackItem struct {
-	kind Kind
-	data interface{}
-}
-
-func (osi OutStackItem) Kind() Kind {
-	return osi.kind
-}
-
-func (osi OutStackItem) Data() interface{} {
-	return osi.data
+	Kind Kind
+	Data interface{}
 }
 
 func ValExpr(expr valexpr.ValExpr) OutStackItem {
 	return OutStackItem{
-		kind: KindValExpr,
-		data: expr,
+		Kind: KindValExpr,
+		Data: expr,
 	}
 }
 
 func PropExpr(expr propexpr.PropExpr) OutStackItem {
 	return OutStackItem{
-		kind: KindPropExpr,
-		data: expr,
+		Kind: KindPropExpr,
+		Data: expr,
 	}
 }
 
 func Ident(identData lexeme.IdentData) OutStackItem {
 	return OutStackItem{
-		kind: KindIdent,
-		data: identData,
+		Kind: KindIdent,
+		Data: identData,
 	}
 }
 
 func CommaListNode(node valexpr.CommaListNode) OutStackItem {
 	return OutStackItem{
-		kind: KindCommaListNode,
-		data: node,
+		Kind: KindCommaListNode,
+		Data: node,
 	}
 }
 

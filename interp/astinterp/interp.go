@@ -75,7 +75,7 @@ func evalValExpr(expr valexpr.ValExpr, vals interp.Solution) *val.Val {
 	case valexpr.GetVar:
 		return &vals[expr.VarNum()]
 	case valexpr.IntLit:
-		var v val.Val = val.NewInt(expr.Data())
+		var v val.Val = val.NewInt(expr.Data)
 		return &v
 	case valexpr.Plus:
 		var v1 = *evalValExpr(expr.E1(), vals)

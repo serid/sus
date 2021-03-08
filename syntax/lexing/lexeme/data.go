@@ -11,31 +11,19 @@ type Data interface {
 }
 
 type IntData struct {
-	data int
+	Data int
 }
 
 func (IntData) tagData() {}
 
-func (i IntData) Data() int {
-	return i.data
-}
-
 type AtData struct {
-	data bytecode.VarNum
+	Data bytecode.VarNum
 }
 
 func (AtData) tagData() {}
 
-func (at AtData) Data() bytecode.VarNum {
-	return at.data
-}
-
 type IdentData struct {
-	data string
+	Data string
 }
 
 func (IdentData) tagData() {}
-
-func (ident IdentData) Data() string {
-	return ident.data
-}

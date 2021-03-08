@@ -82,8 +82,8 @@ func LexateE(s1 string) ([]lexeme.Lexeme, error) {
 
 		// After pushing a lexeme, insert a `RuleCall` between last two lexemes if they are value lexemes
 		if len(result)-2 >= 0 {
-			if result[len(result)-2].IsValBorderLexeme() || result[len(result)-2].Kind() == lexeme.KindParenR {
-				if result[len(result)-1].IsValBorderLexeme() || result[len(result)-1].Kind() == lexeme.KindParenL {
+			if result[len(result)-2].IsValBorderLexeme() || result[len(result)-2].Kind == lexeme.KindParenR {
+				if result[len(result)-1].IsValBorderLexeme() || result[len(result)-1].Kind == lexeme.KindParenL {
 					// Insert an element at `index`
 					index := len(result) - 1
 					result = append(result[:index+1], result[index:]...)

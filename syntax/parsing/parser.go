@@ -27,13 +27,13 @@ func (parser Parser) ParseE(s string) (interface{}, error) {
 	var operatorStack OperatorStack
 
 	for _, l := range lexemes {
-		if l.Kind() == lexeme.KindParenL {
+		if l.Kind == lexeme.KindParenL {
 			// If Lexeme is ParenL, then Push it to stack
 			operatorStack = append(operatorStack, OperatorStackItem(l))
-		} else if l.Kind() == lexeme.KindParenR {
+		} else if l.Kind == lexeme.KindParenR {
 			// If Lexeme is ParenR, then Reduce the stack until a ParenL is found
 			err := reduceUntil(&operatorStack, &outStack, func(tos OperatorStackItem) bool {
-				return lexeme.Lexeme(tos).Kind() == lexeme.KindParenL
+				return lexeme.Lexeme(tos).Kind == lexeme.KindParenL
 			}, func() {
 				panic("No matching ParenL found for ParenR.")
 			})
@@ -49,7 +49,7 @@ func (parser Parser) ParseE(s string) (interface{}, error) {
 			// or precedence level of `operatorStack`.TOS is lower than level of `l`
 
 			err := reduceUntil(&operatorStack, &outStack, func(tos OperatorStackItem) bool {
-				if lexeme.Lexeme(tos).Kind() == lexeme.KindParenL {
+				if lexeme.Lexeme(tos).Kind == lexeme.KindParenL {
 					return true
 				}
 
@@ -89,8 +89,8 @@ func (parser Parser) ParseE(s string) (interface{}, error) {
 		//panic(fmt.Sprintf("Leftover stack items after parsing: %#v.", outStack))
 	}
 
-	//result := outStack[0].Data().(propexpr.PropExpr)
-	result := outStack[0].Data()
+	//result := outStack[0].Data.(propexpr.PropExpr)
+	result := outStack[0].Data
 
 	return result, nil
 }
@@ -124,17 +124,17 @@ func reduceUntil(operatorStack *OperatorStack, outStack *OutStack, f func(tos Op
 }
 
 func shift(lex lexeme.Lexeme, outStack *OutStack) {
-	switch lex.Kind() {
+	switch lex.Kind {
 	case lexeme.KindUnit:
 		*outStack = append(*outStack, osi.ValExpr(valexpr.Unit{}))
 	case lexeme.KindInt:
-		n := lex.Data().(lexeme.IntData)
-		*outStack = append(*outStack, osi.ValExpr(valexpr.NewIntLit(n.Data())))
+		n := lex.Data.(lexeme.IntData)
+		*outStack = append(*outStack, osi.ValExpr(valexpr.NewIntLit(n.Data)))
 	case lexeme.KindAt:
-		n := lex.Data().(lexeme.AtData)
-		*outStack = append(*outStack, osi.ValExpr(valexpr.NewGetVar(n.Data())))
+		n := lex.Data.(lexeme.AtData)
+		*outStack = append(*outStack, osi.ValExpr(valexpr.NewGetVar(n.Data)))
 	case lexeme.KindIdent:
-		identData := lex.Data().(lexeme.IdentData)
+		identData := lex.Data.(lexeme.IdentData)
 		*outStack = append(*outStack, osi.Ident(identData))
 	default:
 		panic(fmt.Sprintf("Unhandled Lexeme: %#v.", lex))
@@ -150,10 +150,10 @@ func reduce(oper lexeme.Lexeme, outStack *OutStack) error {
 
 		switch oper.IsValOrPropOperatorLexeme() {
 		case lexeme.TypeVal:
-			e1 := tos1.Data().(valexpr.ValExpr)
-			e2 := tos2.Data().(valexpr.ValExpr)
+			e1 := tos1.Data.(valexpr.ValExpr)
+			e2 := tos2.Data.(valexpr.ValExpr)
 
-			switch oper.Kind() {
+			switch oper.Kind {
 			case lexeme.KindPlus:
 				*outStack = append(*outStack, osi.ValExpr(valexpr.NewPlus(e2, e1)))
 			case lexeme.KindAsterisk:
@@ -180,10 +180,10 @@ func reduce(oper lexeme.Lexeme, outStack *OutStack) error {
 				panic(fmt.Sprintf("Unsupported binary operator: %#v.", oper))
 			}
 		case lexeme.TypeProp:
-			e1 := tos1.Data().(propexpr.PropExpr)
-			e2 := tos2.Data().(propexpr.PropExpr)
+			e1 := tos1.Data.(propexpr.PropExpr)
+			e2 := tos2.Data.(propexpr.PropExpr)
 
-			switch oper.Kind() {
+			switch oper.Kind {
 			case lexeme.KindConj:
 				*outStack = append(*outStack, osi.PropExpr(propexpr.NewConjunction(e2, e1)))
 			case lexeme.KindDisj:
@@ -192,8 +192,8 @@ func reduce(oper lexeme.Lexeme, outStack *OutStack) error {
 				panic(fmt.Sprintf("Unsupported binary operator: %#v.", oper))
 			}
 		case lexeme.TypeRuleCall:
-			args := tos1.Data().(valexpr.CommaListNode)
-			ident := tos2.Data().(lexeme.IdentData)
+			args := tos1.Data.(valexpr.CommaListNode)
+			ident := tos2.Data.(lexeme.IdentData)
 			_ = ident // TODO: convert function name (symbol) to an RuleId
 			*outStack = append(*outStack, osi.PropExpr(propexpr.NewRuleCall(1, valexpr.NestedPairsToSliceOfValExpr(args))))
 		default:
@@ -230,7 +230,7 @@ func DefaultParser() Parser {
 }
 
 func (parser Parser) OperatorDesciption(lex lexeme.Lexeme) odesc.OperatorDescription {
-	v, ok := parser.operatorDescriptionTable[lex.Kind()]
+	v, ok := parser.operatorDescriptionTable[lex.Kind]
 	if !ok {
 		panic(fmt.Sprintf("Operator description for a lexeme (%#v) is unknown.", lex))
 	}

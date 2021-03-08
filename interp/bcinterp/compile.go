@@ -99,7 +99,7 @@ func compilePropExpr(expr propexpr.PropExpr, body *[]bytecode.Op, cs compilerSta
 func compileValExpr(expr valexpr.ValExpr, context bytecode.SlotNum, body *[]bytecode.Op, cs compilerState) compilerState {
 	switch pExpr := expr.(type) {
 	case valexpr.IntLit:
-		i := pExpr.Data()
+		i := pExpr.Data
 		*body = append(*body, bytecode.PutInt(context, i, cs.NextVarNum))
 		return cs.SkipVar()
 	case valexpr.Plus:
