@@ -2,11 +2,11 @@ package sus
 
 import (
 	"errors"
+	"sus/cmp"
 	"sus/interp"
 	"sus/interp/astinterp"
 	"sus/interp/val"
 	mytesting "sus/stuff/testing"
-	"sus/syntax/cmp"
 	"sus/syntax/lexing"
 	"sus/syntax/lexing/lexeme"
 	"sus/syntax/parsing"
