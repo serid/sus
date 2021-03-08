@@ -1,7 +1,6 @@
 package interp
 
 import (
-	"fmt"
 	"sus/interp/val"
 )
 
@@ -15,10 +14,6 @@ func (sol Solution) Clone() Solution {
 	}
 
 	return newSolution
-}
-
-func (sol Solution) String() string {
-	return fmt.Sprintf("Solution%v", sol)
 }
 
 func ArrayCmp(a, b interface{}) bool {
