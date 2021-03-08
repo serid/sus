@@ -2,28 +2,61 @@ package cmp
 
 import (
 	"fmt"
+	"strings"
+	"sus/stuff"
 	"sus/syntax/parsing/propexpr"
 	"sus/syntax/parsing/valexpr"
 )
 
+// Tries to compare `a` and `b` using simple comparison operator and,
+// if they are not of comparable type, uses `fallbackCmp` function.
+//
+// NOTE: if a and b have differing types, the comparison fails as expected from (==) operator
+// NOTE: "comparable type" is used as defined in go spec
+// https://golang.org/ref/spec#Comparison_operators
+func SmartCmp(a, b interface{}, fallbackCmp func(a, b interface{}) bool) bool {
+	p := stuff.Catch(func() interface{} {
+		return a == b
+	})
+
+	// If simple (==) successfully returned a boolean, pass the return value
+	if b, ok := p.(bool); ok {
+		return b
+	}
+
+	// Otherwise, a panic occurred. Check if it is the "comparing uncomparable type" panic
+	err := fmt.Sprint(p)
+
+	if !strings.HasPrefix(err, "runtime error: comparing uncomparable type ") {
+		panic("unreachable")
+	}
+
+	// Call custom comparison routine
+	return fallbackCmp(a, b)
+}
+
 // This function tries to compare any types in this package
 func Cmp(a, b interface{}) bool {
-	switch a1 := a.(type) {
-	case propexpr.PropExpr:
-		b1, ok := b.(propexpr.PropExpr)
-		if !ok {
-			return false
+	isEqual := SmartCmp(a, b, func(a, b interface{}) bool {
+		switch a1 := a.(type) {
+		case propexpr.PropExpr:
+			b1, ok := b.(propexpr.PropExpr)
+			if !ok {
+				return false
+			}
+			return PropExpr(a1, b1)
+		case valexpr.ValExpr:
+			b1, ok := b.(valexpr.ValExpr)
+			if !ok {
+				return false
+			}
+			return ValExpr(a1, b1)
+		default:
+			panic(fmt.Sprintf("unhandled arg in `Cmp`: %#v", a))
 		}
-		return PropExpr(a1, b1)
-	case valexpr.ValExpr:
-		b1, ok := b.(valexpr.ValExpr)
-		if !ok {
-			return false
-		}
-		return ValExpr(a1, b1)
-	default:
-		panic(fmt.Sprintf("unhandled arg in `Cmp`: %#v", a))
-	}
+	})
+
+	return isEqual
 }
 
 func PropExpr(a, b propexpr.PropExpr) bool {
