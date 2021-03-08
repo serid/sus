@@ -2,23 +2,21 @@ package propexpr
 
 import (
 	"sus/syntax/parsing/valexpr"
+	"sus/types"
 )
 
-// id of a rule, alternative to name
-type RuleId int
-
 type RuleCall struct {
-	rid  RuleId
+	rid  types.RuleId
 	args []valexpr.ValExpr
 }
 
 func (RuleCall) tagPropExpr() {}
 
-func NewRuleCall(rid RuleId, args []valexpr.ValExpr) RuleCall {
+func NewRuleCall(rid types.RuleId, args []valexpr.ValExpr) RuleCall {
 	return RuleCall{rid: rid, args: args}
 }
 
-func (rc RuleCall) Rid() RuleId {
+func (rc RuleCall) Rid() types.RuleId {
 	return rc.rid
 }
 

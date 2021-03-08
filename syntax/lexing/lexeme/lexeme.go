@@ -2,6 +2,7 @@ package lexeme
 
 import (
 	"fmt"
+	"sus/types"
 )
 
 type Kind byte
@@ -81,7 +82,7 @@ func Int(i int) Lexeme {
 	return Lexeme{kind: KindInt, data: IntData{data: i}}
 }
 
-func At(i VarNum) Lexeme {
+func At(i types.VarNum) Lexeme {
 	return Lexeme{kind: KindAt, data: AtData{data: i}}
 }
 
@@ -169,5 +170,3 @@ func CompareLexemeSlices(a, b []Lexeme) bool {
 
 	return true
 }
-
-type VarNum int

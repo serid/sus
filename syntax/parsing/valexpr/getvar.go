@@ -1,19 +1,19 @@
 package valexpr
 
 import (
-	"sus/syntax/lexing/lexeme"
+	"sus/types"
 )
 
 type GetVar struct {
-	varnum lexeme.VarNum
+	varnum types.VarNum
 }
 
 func (GetVar) tagValExpr() {}
 
-func NewGetVar(varnum lexeme.VarNum) GetVar {
+func NewGetVar(varnum types.VarNum) GetVar {
 	return GetVar{varnum: varnum}
 }
 
-func (gv GetVar) VarNum() lexeme.VarNum {
+func (gv GetVar) VarNum() types.VarNum {
 	return gv.varnum
 }
