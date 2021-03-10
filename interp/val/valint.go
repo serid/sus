@@ -3,17 +3,13 @@ package val
 import "strconv"
 
 type Int struct {
-	value int
+	Value int
 }
 
 func (Int) tagVal() {}
 
 func NewInt(value int) Int {
-	return Int{value: value}
-}
-
-func (i Int) Value() int {
-	return i.value
+	return Int{Value: value}
 }
 
 func (i Int) Clone() Val {
@@ -22,5 +18,5 @@ func (i Int) Clone() Val {
 }
 
 func (i Int) String() string {
-	return strconv.Itoa(i.value)
+	return strconv.Itoa(i.Value)
 }

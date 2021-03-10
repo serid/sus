@@ -31,9 +31,9 @@ func compilePropExpr(expr propexpr.PropExpr, body *[]bytecode.Op, cs compilerSta
 	case propexpr.Unification:
 		context := cs.SlotResult()
 
-		cs1 := compileValExpr(pExpr.E1(), context, body, cs)
+		cs1 := compileValExpr(pExpr.E1, context, body, cs)
 		input1 := cs1.VarResult()
-		cs2 := compileValExpr(pExpr.E2(), context, body, cs1)
+		cs2 := compileValExpr(pExpr.E2, context, body, cs1)
 		input2 := cs2.VarResult()
 		output := cs2.NextSlotNum
 		*body = append(*body, bytecode.Unify(context, input1, input2, output))

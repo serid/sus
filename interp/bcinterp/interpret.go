@@ -29,7 +29,7 @@ func Solve(body RuleBody, vals interp.Solution) interp.Solution {
 			solutions[data.Context][data.Output] = val.Ref{Value: data.Data}
 		case bytecode.OpAdd:
 			data := op.Data.(bytecode.ValBinOpData)
-			solutions[data.Context][data.Output] = val.NewInt(solutions[data.Context][data.Input1].(val.Int).Value() + solutions[data.Context][data.Input2].(val.Int).Value())
+			solutions[data.Context][data.Output] = val.NewInt(solutions[data.Context][data.Input1].(val.Int).Value + solutions[data.Context][data.Input2].(val.Int).Value)
 		case bytecode.OpAssign:
 			data := op.Data.(bytecode.AssignData)
 			solutions[data.Context][data.Output] = solutions[data.Context][data.Input]

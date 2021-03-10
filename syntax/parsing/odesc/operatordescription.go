@@ -1,20 +1,12 @@
 package odesc
 
 type OperatorDescription struct {
-	precedenceLevel int
-	associativityLR Associativity
+	PrecedenceLevel int
+	AssociativityLR Associativity
 }
 
 func NewOperatorDescription(precedenceLevel int, associativityLR Associativity) OperatorDescription {
-	return OperatorDescription{precedenceLevel: precedenceLevel, associativityLR: associativityLR}
-}
-
-func (od OperatorDescription) PrecedenceLevel() int {
-	return od.precedenceLevel
-}
-
-func (od OperatorDescription) AssociativityLR() Associativity {
-	return od.associativityLR
+	return OperatorDescription{PrecedenceLevel: precedenceLevel, AssociativityLR: associativityLR}
 }
 
 type Associativity byte

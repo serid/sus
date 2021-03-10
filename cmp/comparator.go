@@ -91,7 +91,7 @@ func PropExpr(a, b propexpr.PropExpr) bool {
 		if !ok {
 			return false
 		}
-		return ValExpr(a1.E1(), b1.E1()) && ValExpr(a1.E2(), b1.E2())
+		return ValExpr(a1.E1, b1.E1) && ValExpr(a1.E2, b1.E2)
 	case propexpr.RuleCall:
 		b1, ok := b.(propexpr.RuleCall)
 		if !ok {

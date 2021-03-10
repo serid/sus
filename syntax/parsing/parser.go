@@ -53,9 +53,9 @@ func (parser Parser) ParseE(s string) (interface{}, error) {
 					return true
 				}
 
-				lPrecedence := parser.OperatorDesciption(l).PrecedenceLevel()
-				lAssociativity := parser.OperatorDesciption(l).AssociativityLR()
-				tosPrecedence := parser.OperatorDesciption(lexeme.Lexeme(tos)).PrecedenceLevel()
+				lPrecedence := parser.OperatorDesciption(l).PrecedenceLevel
+				lAssociativity := parser.OperatorDesciption(l).AssociativityLR
+				tosPrecedence := parser.OperatorDesciption(lexeme.Lexeme(tos)).PrecedenceLevel
 
 				continueEh := tosPrecedence > lPrecedence || (tosPrecedence == lPrecedence && lAssociativity == odesc.AssociativityLeft)
 

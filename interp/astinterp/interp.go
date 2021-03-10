@@ -16,8 +16,8 @@ func Query(propExpr propexpr.PropExpr, vals interp.Solution) interp.Solution {
 	case propexpr.True:
 		return vals
 	case propexpr.Unification:
-		var val1 = evalValExpr(l.E1(), vals)
-		var val2 = evalValExpr(l.E2(), vals)
+		var val1 = evalValExpr(l.E1, vals)
+		var val2 = evalValExpr(l.E2, vals)
 
 		// If one of args to Unification is nil, copy value overwriting None
 
@@ -90,7 +90,7 @@ func evalValExpr(expr valexpr.ValExpr, vals interp.Solution) *val.Val {
 		}
 		var vi2 = v2.(val.Int)
 
-		var v val.Val = val.NewInt(vi1.Value() + vi2.Value())
+		var v val.Val = val.NewInt(vi1.Value + vi2.Value)
 		return &v
 	case valexpr.Mul:
 		var v1 = *evalValExpr(expr.E1(), vals)
@@ -105,7 +105,7 @@ func evalValExpr(expr valexpr.ValExpr, vals interp.Solution) *val.Val {
 		}
 		var vi2 = v2.(val.Int)
 
-		var v val.Val = val.NewInt(vi1.Value() * vi2.Value())
+		var v val.Val = val.NewInt(vi1.Value * vi2.Value)
 		return &v
 	default:
 		panic(fmt.Sprintf("Unhandled ValExpr: %#v.", expr))
