@@ -192,7 +192,18 @@ func reduce(oper lexeme.Lexeme, outStack *OutStack) error {
 				panic(fmt.Sprintf("Unsupported binary operator: %#v.", oper))
 			}
 		case lexeme.TypeRuleCall:
-			args := tos1.Data.(valexpr.CommaListNode)
+			var args valexpr.CommaListNode
+
+			// If call argument is a CommaListNode, just use it
+			// If call argument is a single valexpr, convert it to a CommaListNode with one element
+			if e, ok := tos1.Data.(valexpr.CommaListNode); ok {
+				args = e
+			} else if e, ok := tos1.Data.(valexpr.ValExpr); ok {
+				args = valexpr.NewCommaPair(e, valexpr.Unit{})
+			} else {
+				panic("Type cast error")
+			}
+
 			ident := tos2.Data.(lexeme.IdentData)
 			_ = ident // TODO: convert function name (symbol) to an RuleId
 			*outStack = append(*outStack, osi.PropExpr(propexpr.NewRuleCall(1, valexpr.NestedPairsToSliceOfValExpr(args))))
