@@ -39,13 +39,13 @@ func compilePropExpr(expr propexpr.PropExpr, body *[]bytecode.Op, cs compilerSta
 		*body = append(*body, bytecode.Unify(context, input1, input2, output))
 		return cs2.SkipSol()
 	case propexpr.Conjunction:
-		cs1 := compilePropExpr(pExpr.E1(), body, cs)
+		cs1 := compilePropExpr(pExpr.E1, body, cs)
 		input1 := cs1.SlotResult()
 
 		*body = append(*body, bytecode.ConjunctionPart1(-1, -1)) // Set dummy Op to replace it later
 		part1Address := len(*body) - 1                           // Save address to know where to fix Op later
 
-		cs2 := compilePropExpr(pExpr.E2(), body, cs1)
+		cs2 := compilePropExpr(pExpr.E2, body, cs1)
 		input2 := cs2.SlotResult()
 
 		output := cs2.NextSlotNum
@@ -61,7 +61,7 @@ func compilePropExpr(expr propexpr.PropExpr, body *[]bytecode.Op, cs compilerSta
 		*body = append(*body, bytecode.CloneSolution(-1, -1)) // Set dummy Op to replace it later
 		cloneOpAddress := len(*body) - 1                      // Save address to know where to fix Op later
 
-		cs1 := compilePropExpr(pExpr.E1(), body, cs)
+		cs1 := compilePropExpr(pExpr.E1, body, cs)
 		input1 := cs1.SlotResult()
 
 		csc := cs1.SkipSol() // CompilerState after cloning
@@ -71,7 +71,7 @@ func compilePropExpr(expr propexpr.PropExpr, body *[]bytecode.Op, cs compilerSta
 		*body = append(*body, bytecode.DisjunctionPart1(-1, -1)) // Set dummy Op to replace it later
 		part1Address := len(*body) - 1                           // Save address to know where to fix Op later
 
-		cs2 := compilePropExpr(pExpr.E2(), body, csc)
+		cs2 := compilePropExpr(pExpr.E2, body, csc)
 		input2 := cs2.SlotResult()
 
 		output := cs2.NextSlotNum
@@ -82,14 +82,14 @@ func compilePropExpr(expr propexpr.PropExpr, body *[]bytecode.Op, cs compilerSta
 
 		return cs2.SkipSol()
 	case propexpr.RuleCall:
-		var input = make([]bytecode.VarNum, len(pExpr.Args()))
+		var input = make([]bytecode.VarNum, len(pExpr.Args))
 		var newCs = cs
 		// Compile valExpressions and save their VarNum-s
-		for i, exprArg := range pExpr.Args() {
+		for i, exprArg := range pExpr.Args {
 			newCs = compileValExpr(exprArg, newCs.SlotResult(), body, newCs)
 			input[i] = newCs.VarResult()
 		}
-		*body = append(*body, bytecode.RuleCall(newCs.SlotResult(), pExpr.Rid(), input, newCs.NextSlotNum))
+		*body = append(*body, bytecode.RuleCall(newCs.SlotResult(), pExpr.Rid, input, newCs.NextSlotNum))
 		return cs.SkipSol()
 	default:
 		panic("unsupported propexpr")
@@ -103,15 +103,15 @@ func compileValExpr(expr valexpr.ValExpr, context bytecode.SlotNum, body *[]byte
 		*body = append(*body, bytecode.PutInt(context, i, cs.NextVarNum))
 		return cs.SkipVar()
 	case valexpr.Plus:
-		cs1 := compileValExpr(pExpr.E1(), context, body, cs)
+		cs1 := compileValExpr(pExpr.E1, context, body, cs)
 		input1 := cs1.VarResult()
-		cs2 := compileValExpr(pExpr.E2(), context, body, cs1)
+		cs2 := compileValExpr(pExpr.E2, context, body, cs1)
 		input2 := cs2.VarResult()
 		output := cs2.NextVarNum
 		*body = append(*body, bytecode.Add(context, input1, input2, output))
 		return cs2.SkipVar()
 	case valexpr.GetVar:
-		*body = append(*body, bytecode.PutVarNum(context, pExpr.VarNum(), cs.NextVarNum))
+		*body = append(*body, bytecode.PutVarNum(context, pExpr.VarNum, cs.NextVarNum))
 		return cs.SkipVar()
 	default:
 		panic("unsupported valexpr")

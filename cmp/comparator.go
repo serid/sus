@@ -79,13 +79,13 @@ func PropExpr(a, b propexpr.PropExpr) bool {
 		if !ok {
 			return false
 		}
-		return PropExpr(a1.E1(), b1.E1()) && PropExpr(a1.E2(), b1.E2())
+		return PropExpr(a1.E1, b1.E1) && PropExpr(a1.E2, b1.E2)
 	case propexpr.Disjunction:
 		b1, ok := b.(propexpr.Disjunction)
 		if !ok {
 			return false
 		}
-		return PropExpr(a1.E1(), b1.E1()) && PropExpr(a1.E2(), b1.E2())
+		return PropExpr(a1.E1, b1.E1) && PropExpr(a1.E2, b1.E2)
 	case propexpr.Unification:
 		b1, ok := b.(propexpr.Unification)
 		if !ok {
@@ -97,7 +97,7 @@ func PropExpr(a, b propexpr.PropExpr) bool {
 		if !ok {
 			return false
 		}
-		return a1.Rid() == b1.Rid() && ValExprSliceEquivalent(a1.Args(), b1.Args())
+		return a1.Rid == b1.Rid && ValExprSliceEquivalent(a1.Args, b1.Args)
 	case propexpr.True:
 		return a == b
 	default:
@@ -112,19 +112,19 @@ func ValExpr(a, b valexpr.ValExpr) bool {
 		if !ok {
 			return false
 		}
-		return ValExpr(a1.E1(), b1.E1()) && ValExpr(a1.E2(), b1.E2())
+		return ValExpr(a1.E1, b1.E1) && ValExpr(a1.E2, b1.E2)
 	case valexpr.Mul:
 		b1, ok := b.(valexpr.Mul)
 		if !ok {
 			return false
 		}
-		return ValExpr(a1.E1(), b1.E1()) && ValExpr(a1.E2(), b1.E2())
+		return ValExpr(a1.E1, b1.E1) && ValExpr(a1.E2, b1.E2)
 	case valexpr.CommaListPair:
 		b1, ok := b.(valexpr.CommaListPair)
 		if !ok {
 			return false
 		}
-		return ValExpr(a1.V(), b1.V()) && ValExpr(a1.Tail(), b1.Tail())
+		return ValExpr(a1.V, b1.V) && ValExpr(a1.Tail, b1.Tail)
 	case valexpr.IntLit, valexpr.GetVar, valexpr.Unit:
 		return a == b
 	default:

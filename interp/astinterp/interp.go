@@ -37,10 +37,10 @@ func Query(propExpr propexpr.PropExpr, vals interp.Solution) interp.Solution {
 			return nil
 		}
 	case propexpr.Conjunction:
-		var success1 = Query(l.E1(), vals)
+		var success1 = Query(l.E1, vals)
 
 		if success1 != nil {
-			var success2 = Query(l.E2(), success1)
+			var success2 = Query(l.E2, success1)
 
 			if success2 != nil {
 				return success2
@@ -51,12 +51,12 @@ func Query(propExpr propexpr.PropExpr, vals interp.Solution) interp.Solution {
 			return nil
 		}
 	case propexpr.Disjunction:
-		var success1 = Query(l.E1(), vals.Clone())
+		var success1 = Query(l.E1, vals.Clone())
 
 		if success1 != nil {
 			return success1
 		} else {
-			var success2 = Query(l.E2(), vals)
+			var success2 = Query(l.E2, vals)
 
 			if success2 != nil {
 				return success2
@@ -73,18 +73,18 @@ func Query(propExpr propexpr.PropExpr, vals interp.Solution) interp.Solution {
 func evalValExpr(expr valexpr.ValExpr, vals interp.Solution) *val.Val {
 	switch expr := expr.(type) {
 	case valexpr.GetVar:
-		return &vals[expr.VarNum()]
+		return &vals[expr.VarNum]
 	case valexpr.IntLit:
 		var v val.Val = val.NewInt(expr.Data)
 		return &v
 	case valexpr.Plus:
-		var v1 = *evalValExpr(expr.E1(), vals)
+		var v1 = *evalValExpr(expr.E1, vals)
 		if v1 == nil {
 			panic("using unset variables in arithmetic expressions is unsupported")
 		}
 		var vi1 = v1.(val.Int)
 
-		var v2 = *evalValExpr(expr.E2(), vals)
+		var v2 = *evalValExpr(expr.E2, vals)
 		if v2 == nil {
 			panic("using unset variables in arithmetic expressions is unsupported")
 		}
@@ -93,13 +93,13 @@ func evalValExpr(expr valexpr.ValExpr, vals interp.Solution) *val.Val {
 		var v val.Val = val.NewInt(vi1.Value + vi2.Value)
 		return &v
 	case valexpr.Mul:
-		var v1 = *evalValExpr(expr.E1(), vals)
+		var v1 = *evalValExpr(expr.E1, vals)
 		if v1 == nil {
 			panic("using unset variables in arithmetic expressions is unsupported")
 		}
 		var vi1 = v1.(val.Int)
 
-		var v2 = *evalValExpr(expr.E2(), vals)
+		var v2 = *evalValExpr(expr.E2, vals)
 		if v2 == nil {
 			panic("using unset variables in arithmetic expressions is unsupported")
 		}

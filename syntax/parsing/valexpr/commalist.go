@@ -8,8 +8,8 @@ type CommaListNode interface {
 // `e2` will always be a `CommaListPair` value or a Unit
 // This way CommaPairs form a linked list where an element is stored in e1 and a link to the next node is stored in e2
 type CommaListPair struct {
-	v    ValExpr
-	tail CommaListNode
+	V    ValExpr
+	Tail CommaListNode
 }
 
 func (CommaListPair) tagValExpr() {}
@@ -17,15 +17,7 @@ func (CommaListPair) tagValExpr() {}
 func (CommaListPair) tagCommaListNode() {}
 
 func NewCommaPair(v ValExpr, tail CommaListNode) CommaListPair {
-	return CommaListPair{v: v, tail: tail}
-}
-
-func (clp CommaListPair) V() ValExpr {
-	return clp.v
-}
-
-func (clp CommaListPair) Tail() CommaListNode {
-	return clp.tail
+	return CommaListPair{V: v, Tail: tail}
 }
 
 type Unit struct{}
@@ -48,8 +40,8 @@ loop:
 		case Unit:
 			break loop
 		case CommaListPair:
-			flattenedSlice = append(flattenedSlice, v.V())
-			expr = v.Tail()
+			flattenedSlice = append(flattenedSlice, v.V)
+			expr = v.Tail
 		default:
 			panic("Unreachable.")
 		}
