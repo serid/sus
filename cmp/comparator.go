@@ -97,7 +97,7 @@ func PropExpr(a, b propexpr.PropExpr) bool {
 		if !ok {
 			return false
 		}
-		return a1.Rid == b1.Rid && ValExprSliceEquivalent(a1.Args, b1.Args)
+		return a1.Name == b1.Name && ValExprSliceEquivalent(a1.Args, b1.Args)
 	case propexpr.True:
 		return a == b
 	default:

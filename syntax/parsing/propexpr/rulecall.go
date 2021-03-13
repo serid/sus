@@ -1,17 +1,16 @@
 package propexpr
 
 import (
-	"sus/interp/bcinterp/bytecode"
 	"sus/syntax/parsing/valexpr"
 )
 
 type RuleCall struct {
-	Rid  bytecode.RuleId
+	Name string
 	Args []valexpr.ValExpr
 }
 
 func (RuleCall) tagPropExpr() {}
 
-func NewRuleCall(rid bytecode.RuleId, args []valexpr.ValExpr) RuleCall {
-	return RuleCall{Rid: rid, Args: args}
+func NewRuleCall(name string, args []valexpr.ValExpr) RuleCall {
+	return RuleCall{Name: name, Args: args}
 }

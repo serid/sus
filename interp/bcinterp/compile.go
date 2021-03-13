@@ -89,7 +89,11 @@ func compilePropExpr(expr propexpr.PropExpr, body *[]bytecode.Op, cs compilerSta
 			newCs = compileValExpr(exprArg, newCs.SlotResult(), body, newCs)
 			input[i] = newCs.VarResult()
 		}
-		*body = append(*body, bytecode.RuleCall(newCs.SlotResult(), pExpr.Rid, input, newCs.NextSlotNum))
+
+		// TODO: convert function name (symbol) to an RuleId
+		_ = pExpr.Name
+
+		*body = append(*body, bytecode.RuleCall(newCs.SlotResult(), 1, input, newCs.NextSlotNum))
 		return cs.SkipSol()
 	default:
 		panic("unsupported propexpr")

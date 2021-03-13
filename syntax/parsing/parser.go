@@ -205,8 +205,7 @@ func reduce(oper lexeme.Lexeme, outStack *OutStack) error {
 			}
 
 			ident := tos2.Data.(lexeme.IdentData)
-			_ = ident // TODO: convert function name (symbol) to an RuleId
-			*outStack = append(*outStack, osi.PropExpr(propexpr.NewRuleCall(1, valexpr.NestedPairsToSliceOfValExpr(args))))
+			*outStack = append(*outStack, osi.PropExpr(propexpr.NewRuleCall(ident.Data, valexpr.NestedPairsToSliceOfValExpr(args))))
 		default:
 			panic("Unreachable.")
 		}
