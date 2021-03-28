@@ -13,11 +13,12 @@ type RuleBody struct {
 
 	// VarTable keeps track of where a named variable is stored
 	VarTable map[string]bytecode.VarNum
-	Result   bytecode.SlotNum
+	LastSlot bytecode.SlotNum // LastSlot is also index of a slot where rule execution result is placed
+	LastVar  bytecode.VarNum
 }
 
 func CompileBody(expr propexpr.PropExpr, firstFreeVariable bytecode.VarNum) RuleBody {
-	var body = RuleBody{Ops: make([]bytecode.Op, 0), Result: -1}
+	var body = RuleBody{Ops: make([]bytecode.Op, 0), LastSlot: -1, LastVar: -1}
 
 	cs := compilePropExpr(expr, &body.Ops, compilerState{
 		NextSlotNum: 1,
@@ -25,8 +26,9 @@ func CompileBody(expr propexpr.PropExpr, firstFreeVariable bytecode.VarNum) Rule
 		VarTable:    make(map[string]bytecode.VarNum),
 	})
 
-	body.Result = cs.SlotResult()
 	body.VarTable = cs.VarTable
+	body.LastSlot = cs.SlotResult()
+	body.LastVar = cs.VarResult()
 
 	return body
 }
@@ -132,7 +134,7 @@ func RuleBodyEq(a, b interface{}) bool {
 	ra := a.(RuleBody)
 	rb := b.(RuleBody)
 
-	return ra.Result == rb.Result && SliceOpEq(ra.Ops, rb.Ops)
+	return ra.LastSlot == rb.LastSlot && SliceOpEq(ra.Ops, rb.Ops)
 }
 
 func SliceOpEq(a, b interface{}) bool {

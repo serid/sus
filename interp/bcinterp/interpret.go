@@ -8,10 +8,9 @@ import (
 )
 
 func Solve(body RuleBody, input map[string]val.Val) interp.Solution {
-	solutions := make([]interp.Solution, body.Result+1)
+	solutions := make([]interp.Solution, body.LastSlot+1)
 
-	// TODO: compute len(vals) from source code, don't hard-code 20
-	vals := make(interp.Solution, 20)
+	vals := make(interp.Solution, body.LastVar+1)
 
 	// Copy inputs to actual val array (solution) that will be solved
 	for k, v := range input {
@@ -115,7 +114,7 @@ func Solve(body RuleBody, input map[string]val.Val) interp.Solution {
 		i++
 	}
 
-	result := solutions[body.Result]
+	result := solutions[body.LastSlot]
 
 	return result
 }

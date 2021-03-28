@@ -148,7 +148,7 @@ func TestBytecodeCompiler1(t *testing.T) {
 		bytecode.DisjunctionPart1(1, 8),
 		bytecode.RuleCall(2, 1, []bytecode.VarNum{}, 3),
 		bytecode.DisjunctionPart2(1, 3, 4),
-	}, Result: 4, VarTable: map[string]bytecode.VarNum{"A": 3}}
+	}, LastSlot: 4, VarTable: map[string]bytecode.VarNum{"A": 3}}
 
 	mytesting.AssertEqF(bc, expectedBc, bcinterp.RuleBodyEq, t)
 
