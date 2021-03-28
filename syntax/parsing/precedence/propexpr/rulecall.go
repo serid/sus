@@ -1,7 +1,7 @@
 package propexpr
 
 import (
-	"sus/syntax/parsing/valexpr"
+	"sus/syntax/parsing/precedence/valexpr"
 )
 
 type RuleCall struct {

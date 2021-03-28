@@ -5,8 +5,8 @@ import (
 	"strings"
 	"sus/interp/bcinterp/bytecode"
 	"sus/stuff"
-	"sus/syntax/parsing/propexpr"
-	"sus/syntax/parsing/valexpr"
+	"sus/syntax/parsing/precedence/propexpr"
+	"sus/syntax/parsing/precedence/valexpr"
 )
 
 // Tries to compare `a` and `b` using simple comparison operator and,

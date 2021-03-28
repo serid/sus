@@ -3,8 +3,8 @@ package bcinterp
 import (
 	"sus/cmp"
 	"sus/interp/bcinterp/bytecode"
-	"sus/syntax/parsing/propexpr"
-	"sus/syntax/parsing/valexpr"
+	"sus/syntax/parsing/precedence/propexpr"
+	"sus/syntax/parsing/precedence/valexpr"
 )
 
 // Executable body of a rule

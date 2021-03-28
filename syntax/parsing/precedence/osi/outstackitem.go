@@ -1,8 +1,8 @@
 package osi
 
 import (
-	"sus/syntax/parsing/propexpr"
-	"sus/syntax/parsing/valexpr"
+	"sus/syntax/parsing/precedence/propexpr"
+	"sus/syntax/parsing/precedence/valexpr"
 )
 
 // `data` may be one of

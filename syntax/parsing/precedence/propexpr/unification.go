@@ -1,6 +1,6 @@
 package propexpr
 
-import "sus/syntax/parsing/valexpr"
+import "sus/syntax/parsing/precedence/valexpr"
 
 type Unification struct {
 	E1 valexpr.ValExpr

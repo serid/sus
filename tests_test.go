@@ -10,8 +10,9 @@ import (
 	"sus/syntax/lexing"
 	"sus/syntax/lexing/lexeme"
 	"sus/syntax/parsing"
-	"sus/syntax/parsing/propexpr"
-	"sus/syntax/parsing/valexpr"
+	errors2 "sus/syntax/parsing/errors"
+	"sus/syntax/parsing/precedence/propexpr"
+	"sus/syntax/parsing/precedence/valexpr"
 	"testing"
 )
 
@@ -78,14 +79,14 @@ func TestParser1F(t *testing.T) {
 	r, err := parsing.DefaultParser().ParseE("1 +")
 	mytesting.AssertEq(r, nil, t)
 	mytesting.Assert(err != nil, t)
-	mytesting.Assert(errors.Is(err, parsing.NewEOFError(lexeme.Any())), t)
+	mytesting.Assert(errors.Is(err, errors2.NewEof(lexeme.Any())), t)
 }
 
 //func TestParser2F(t *testing.T) {
 //	r, err := parsing.DefaultParser().ParseE("1 + 2 3 4")
 //	mytesting.AssertEq(r, nil, t)
 //	mytesting.Assert(err != nil, t)
-//	mytesting.Assert(errors.Is(err, parsing.TrailingLexemesError{}), t)
+//	mytesting.Assert(errors.Is(err, parsing.TrailingLexemes{}), t)
 //}
 
 func TestInterpreter1(t *testing.T) {
