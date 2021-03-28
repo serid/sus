@@ -4,7 +4,6 @@ import (
 	"errors"
 	"sus/cmp"
 	"sus/interp"
-	"sus/interp/astinterp"
 	"sus/interp/bcinterp"
 	"sus/interp/bcinterp/bytecode"
 	"sus/interp/val"
@@ -120,12 +119,12 @@ func TestInterpreter5(t *testing.T) {
 	testBytecodeInterpreter(input, expectedOutput, "@0 = 1 + 2", t)
 }
 
-func testInterpreter(vals interp.Solution, expectedOutput interp.Solution, s string, t *testing.T) {
-	expr := parsing.DefaultParser().Parse(s).(propexpr.PropExpr)
-	solution := astinterp.Query(expr, vals)
-
-	mytesting.AssertEqF(solution, expectedOutput, interp.ArrayCmp, t)
-}
+//func testInterpreter(vals interp.Solution, expectedOutput interp.Solution, s string, t *testing.T) {
+//	expr := parsing.DefaultParser().Parse(s).(propexpr.PropExpr)
+//	solution := astinterp.Query(expr, vals)
+//
+//	mytesting.AssertEqF(solution, expectedOutput, interp.ArrayCmp, t)
+//}
 
 func testBytecodeInterpreter(vals interp.Solution, expectedOutput interp.Solution, s string, t *testing.T) {
 	expr := parsing.DefaultParser().Parse(s).(propexpr.PropExpr)
