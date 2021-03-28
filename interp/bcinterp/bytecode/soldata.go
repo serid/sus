@@ -3,7 +3,7 @@ package bytecode
 // Data for Operations operating on solutions
 
 type SolCloneSolutionData struct {
-	Input SlotNum
+	Input  SlotNum
 	Output SlotNum
 }
 
@@ -11,9 +11,9 @@ func (SolCloneSolutionData) tagData() {}
 
 type SolUnifyData struct {
 	Context SlotNum
-	Input1 VarNum
-	Input2 VarNum
-	Output SlotNum
+	Input1  VarNum
+	Input2  VarNum
+	Output  SlotNum
 }
 
 func (SolUnifyData) tagData() {}

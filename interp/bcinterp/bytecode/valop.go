@@ -15,8 +15,8 @@ func PutVarNum(context SlotNum, data VarNum, output VarNum) Op {
 func Add(context SlotNum, input1, input2, output VarNum) Op {
 	return Op{OpCode: OpAdd, Data: ValBinOpData{
 		Context: context,
-		Input1: input1,
-		Input2: input2,
-		Output: output,
+		Input1:  input1,
+		Input2:  input2,
+		Output:  output,
 	}}
 }

@@ -9,11 +9,11 @@ import (
 
 // Executable body of a rule
 type RuleBody struct {
-	Ops    []bytecode.Op
+	Ops []bytecode.Op
 
 	// VarTable keeps track of where a named variable is stored
 	VarTable map[string]bytecode.VarNum
-	Result bytecode.SlotNum
+	Result   bytecode.SlotNum
 }
 
 func CompileBody(expr propexpr.PropExpr, firstFreeVariable bytecode.VarNum) RuleBody {
@@ -22,7 +22,7 @@ func CompileBody(expr propexpr.PropExpr, firstFreeVariable bytecode.VarNum) Rule
 	cs := compilePropExpr(expr, &body.Ops, compilerState{
 		NextSlotNum: 1,
 		NextVarNum:  firstFreeVariable,
-		VarTable: make(map[string]bytecode.VarNum),
+		VarTable:    make(map[string]bytecode.VarNum),
 	})
 
 	body.Result = cs.SlotResult()

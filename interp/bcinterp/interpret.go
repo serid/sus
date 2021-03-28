@@ -8,7 +8,7 @@ import (
 )
 
 func Solve(body RuleBody, input map[string]val.Val) interp.Solution {
-	solutions := make([]interp.Solution, body.Result + 1)
+	solutions := make([]interp.Solution, body.Result+1)
 
 	// TODO: compute len(vals) from source code, don't hard-code 20
 	vals := make(interp.Solution, 20)
