@@ -10,6 +10,9 @@ import (
 // Executable body of a rule
 type RuleBody struct {
 	Ops    []bytecode.Op
+
+	// VarTable keeps track of where a named variable is stored
+	VarTable map[string]bytecode.VarNum
 	Result bytecode.SlotNum
 }
 
@@ -19,9 +22,11 @@ func CompileBody(expr propexpr.PropExpr, firstFreeVariable bytecode.VarNum) Rule
 	cs := compilePropExpr(expr, &body.Ops, compilerState{
 		NextSlotNum: 1,
 		NextVarNum:  firstFreeVariable,
+		VarTable: make(map[string]bytecode.VarNum),
 	})
 
 	body.Result = cs.SlotResult()
+	body.VarTable = cs.VarTable
 
 	return body
 }
@@ -115,7 +120,8 @@ func compileValExpr(expr valexpr.ValExpr, context bytecode.SlotNum, body *[]byte
 		*body = append(*body, bytecode.Add(context, input1, input2, output))
 		return cs2.SkipVar()
 	case valexpr.GetVar:
-		*body = append(*body, bytecode.PutVarNum(context, pExpr.VarNum, cs.NextVarNum))
+		vn, cs := cs.GetNamedVar(pExpr.Name)
+		*body = append(*body, bytecode.PutVarNum(context, vn, cs.NextVarNum))
 		return cs.SkipVar()
 	default:
 		panic("unsupported valexpr")

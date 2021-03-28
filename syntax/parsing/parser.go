@@ -130,12 +130,9 @@ func shift(lex lexeme.Lexeme, outStack *OutStack) {
 	case lexeme.KindInt:
 		n := lex.Data.(lexeme.IntData)
 		*outStack = append(*outStack, osi.ValExpr(valexpr.NewIntLit(n.Data)))
-	case lexeme.KindAt:
-		n := lex.Data.(lexeme.AtData)
-		*outStack = append(*outStack, osi.ValExpr(valexpr.NewGetVar(n.Data)))
 	case lexeme.KindIdent:
 		identData := lex.Data.(lexeme.IdentData)
-		*outStack = append(*outStack, osi.Ident(identData))
+		*outStack = append(*outStack, osi.ValExpr(valexpr.NewGetVar(identData.Data)))
 	default:
 		panic(fmt.Sprintf("Unhandled Lexeme: %#v.", lex))
 	}
@@ -204,8 +201,8 @@ func reduce(oper lexeme.Lexeme, outStack *OutStack) error {
 				panic("Type cast error")
 			}
 
-			ident := tos2.Data.(lexeme.IdentData)
-			*outStack = append(*outStack, osi.PropExpr(propexpr.NewRuleCall(ident.Data, valexpr.NestedPairsToSliceOfValExpr(args))))
+			ident := tos2.Data.(valexpr.GetVar)
+			*outStack = append(*outStack, osi.PropExpr(propexpr.NewRuleCall(ident.Name, valexpr.NestedPairsToSliceOfValExpr(args))))
 		default:
 			panic("Unreachable.")
 		}

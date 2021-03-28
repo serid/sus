@@ -1,7 +1,6 @@
 package lexing
 
 import (
-	"sus/interp/bcinterp/bytecode"
 	"sus/stuff"
 	"sus/syntax/lexing/lexeme"
 	"unicode"
@@ -18,20 +17,6 @@ func LexateE(s1 string) ([]lexeme.Lexeme, error) {
 	for i < len(s) {
 		if s[i] == ' ' {
 			i++
-		} else if s[i] == '@' {
-			i++
-			if unicode.IsDigit(s[i]) {
-				// Parse an integer
-				n := 0
-				for i < len(s) && unicode.IsDigit(s[i]) {
-					n *= 10
-					n += int(s[i]) - '0'
-					i++
-				}
-				result = append(result, lexeme.At(bytecode.VarNum(n)))
-			} else {
-				panic("'@' should be followed by a number")
-			}
 		} else if s[i] == '+' {
 			result = append(result, lexeme.Plus())
 			i++

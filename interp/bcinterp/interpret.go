@@ -7,15 +7,18 @@ import (
 	"sus/interp/val"
 )
 
-func Solve(body RuleBody, vals interp.Solution) interp.Solution {
-	// TODO: compute len(solutions) from source code, don't hard-code 30
-	solutions := make([]interp.Solution, 30)
+func Solve(body RuleBody, input map[string]val.Val) interp.Solution {
+	solutions := make([]interp.Solution, body.Result + 1)
 
-	// extendedVals is extended to account for temporary variables used by interpreter when calculating expressions
-	// TODO: compute len(extendedVals) from source code, don't hard-code 20
-	extendedVals := make(interp.Solution, len(vals) + 20)
-	copy(extendedVals, vals)
-	solutions[0] = extendedVals
+	// TODO: compute len(vals) from source code, don't hard-code 20
+	vals := make(interp.Solution, 20)
+
+	// Copy inputs to actual val array (solution) that will be solved
+	for k, v := range input {
+		vals[body.VarTable[k]] = v
+	}
+
+	solutions[0] = vals
 
 	var i bytecode.BodyAddress = 0
 	for int(i) < len(body.Ops) {
@@ -113,10 +116,8 @@ func Solve(body RuleBody, vals interp.Solution) interp.Solution {
 	}
 
 	result := solutions[body.Result]
-	shrinkedVals := make(interp.Solution, len(vals))
-	copy(shrinkedVals, result)
 
-	return shrinkedVals
+	return result
 }
 
 func maybeDereference(solution interp.Solution, where bytecode.VarNum) *val.Val {

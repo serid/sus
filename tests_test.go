@@ -3,7 +3,6 @@ package sus
 import (
 	"errors"
 	"sus/cmp"
-	"sus/interp"
 	"sus/interp/bcinterp"
 	"sus/interp/bcinterp/bytecode"
 	"sus/interp/val"
@@ -60,7 +59,7 @@ func TestParser7(t *testing.T) {
 }
 
 func TestParser8(t *testing.T) {
-	mytesting.AssertEqF(parsing.DefaultParser().Parse("@1 = @2 /\\ True() \\/ @5 = @6 /\\ @7 = @8"), propexpr.NewDisjunction(propexpr.NewConjunction(propexpr.NewUnification(valexpr.NewGetVar(1), valexpr.NewGetVar(2)), propexpr.NewRuleCall("True", []valexpr.ValExpr{})), propexpr.NewConjunction(propexpr.NewUnification(valexpr.NewGetVar(5), valexpr.NewGetVar(6)), propexpr.NewUnification(valexpr.NewGetVar(7), valexpr.NewGetVar(8)))), cmp.Cmp, t)
+	mytesting.AssertEqF(parsing.DefaultParser().Parse("A = B /\\ True() \\/ C = D /\\ E = F"), propexpr.NewDisjunction(propexpr.NewConjunction(propexpr.NewUnification(valexpr.NewGetVar("A"), valexpr.NewGetVar("B")), propexpr.NewRuleCall("True", []valexpr.ValExpr{})), propexpr.NewConjunction(propexpr.NewUnification(valexpr.NewGetVar("C"), valexpr.NewGetVar("D")), propexpr.NewUnification(valexpr.NewGetVar("E"), valexpr.NewGetVar("F")))), cmp.Cmp, t)
 }
 
 func TestParser9(t *testing.T) {
@@ -90,33 +89,33 @@ func TestParser1F(t *testing.T) {
 //}
 
 func TestInterpreter1(t *testing.T) {
-	input := []val.Val{val.NewInt(100), nil}
-	expectedOutput := []val.Val{val.NewInt(100), val.NewInt(100)}
-	testBytecodeInterpreter(input, expectedOutput, "@0 = @1", t)
+	input := map[string]val.Val{"A": val.NewInt(100), "B": nil}
+	expectedOutput := map[string]val.Val{"A": val.NewInt(100), "B": val.NewInt(100)}
+	testBytecodeInterpreter(input, expectedOutput, "A = B", t)
 }
 
 func TestInterpreter2(t *testing.T) {
-	input := []val.Val{nil}
-	expectedOutput := []val.Val{val.NewInt(124)}
-	testBytecodeInterpreter(input, expectedOutput, "@0 = 124", t)
+	input := map[string]val.Val{"A": nil}
+	expectedOutput := map[string]val.Val{"A": val.NewInt(124)}
+	testBytecodeInterpreter(input, expectedOutput, "A = 124", t)
 }
 
 func TestInterpreter3(t *testing.T) {
-	input := []val.Val{val.NewInt(100), nil, nil}
-	expectedOutput := []val.Val{val.NewInt(100), val.NewInt(100), val.NewInt(100)}
-	testBytecodeInterpreter(input, expectedOutput, "@0 = @1 /\\ @1 = @2", t)
+	input := map[string]val.Val{"A": val.NewInt(100), "B": nil, "C": nil}
+	expectedOutput := map[string]val.Val{"A": val.NewInt(100), "B": val.NewInt(100), "C": val.NewInt(100)}
+	testBytecodeInterpreter(input, expectedOutput, "A = B /\\ B = C", t)
 }
 
 func TestInterpreter4(t *testing.T) {
-	input := []val.Val{nil}
-	expectedOutput := []val.Val{val.NewInt(50)}
-	testBytecodeInterpreter(input, expectedOutput, "1 = 2 \\/ 50 = @0", t)
+	input := map[string]val.Val{"A": nil}
+	expectedOutput := map[string]val.Val{"A": val.NewInt(50)}
+	testBytecodeInterpreter(input, expectedOutput, "1 = 2 \\/ 50 = A", t)
 }
 
 func TestInterpreter5(t *testing.T) {
-	input := []val.Val{nil}
-	expectedOutput := []val.Val{val.NewInt(3)}
-	testBytecodeInterpreter(input, expectedOutput, "@0 = 1 + 2", t)
+	input := map[string]val.Val{"A": nil}
+	expectedOutput := map[string]val.Val{"A": val.NewInt(3)}
+	testBytecodeInterpreter(input, expectedOutput, "A = 1 + 2", t)
 }
 
 //func testInterpreter(vals interp.Solution, expectedOutput interp.Solution, s string, t *testing.T) {
@@ -126,37 +125,39 @@ func TestInterpreter5(t *testing.T) {
 //	mytesting.AssertEqF(solution, expectedOutput, interp.ArrayCmp, t)
 //}
 
-func testBytecodeInterpreter(vals interp.Solution, expectedOutput interp.Solution, s string, t *testing.T) {
+func testBytecodeInterpreter(input map[string]val.Val, expectedOutput map[string]val.Val, s string, t *testing.T) {
 	expr := parsing.DefaultParser().Parse(s).(propexpr.PropExpr)
-	firstFreeVariable := bytecode.VarNum(len(vals))
-	bc := bcinterp.CompileBody(expr, firstFreeVariable)
-	solution := bcinterp.Solve(bc, vals)
+	bc := bcinterp.CompileBody(expr, 1)
+	solution := bcinterp.Solve(bc, input)
 
-	mytesting.AssertEqF(solution, expectedOutput, interp.ArrayCmp, t)
+	for k, v := range expectedOutput {
+		mytesting.AssertEq(solution[bc.VarTable[k]], v, t)
+	}
 }
 
 func TestBytecodeCompiler1(t *testing.T) {
-	expr := parsing.DefaultParser().Parse("1 + 2 = @8 \\/ True()").(propexpr.PropExpr)
+	expr := parsing.DefaultParser().Parse("1 + 2 = A \\/ True()").(propexpr.PropExpr)
 	bc := bcinterp.CompileBody(expr, 0)
 	expectedBc := bcinterp.RuleBody{Ops: []bytecode.Op{
 		bytecode.CloneSolution(0, 2),
 		bytecode.PutInt(0, 1, 0),
 		bytecode.PutInt(0, 2, 1),
 		bytecode.Add(0, 0, 1, 2),
-		bytecode.PutVarNum(0, 8, 3),
-		bytecode.Unify(0, 2, 3, 1),
+		bytecode.PutVarNum(0, 3, 4),
+		bytecode.Unify(0, 2, 4, 1),
 		bytecode.DisjunctionPart1(1, 8),
 		bytecode.RuleCall(2, 1, []bytecode.VarNum{}, 3),
 		bytecode.DisjunctionPart2(1, 3, 4),
-	}, Result: 4}
+	}, Result: 4, VarTable: map[string]bytecode.VarNum{"A": 3}}
 
 	mytesting.AssertEqF(bc, expectedBc, bcinterp.RuleBodyEq, t)
 
-	input := make([]val.Val, 10)
-	input[8] = nil
+	input := map[string]val.Val{"A": nil}
 	solution := bcinterp.Solve(bc, input)
 
-	mytesting.AssertEq(solution[8], val.NewInt(3), t)
+	for k, v := range map[string]val.Val{"A": val.NewInt(3)} {
+		mytesting.AssertEq(solution[bc.VarTable[k]], v, t)
+	}
 }
 
 func TestPrefixRunes(t *testing.T) {

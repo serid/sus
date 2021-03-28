@@ -2,7 +2,6 @@ package lexeme
 
 import (
 	"fmt"
-	"sus/interp/bcinterp/bytecode"
 )
 
 type Kind byte
@@ -20,7 +19,6 @@ const (
 	KindParenR
 	KindUnit
 	KindInt
-	KindAt
 	KindIdent
 	KindAny
 )
@@ -74,10 +72,6 @@ func Int(i int) Lexeme {
 	return Lexeme{Kind: KindInt, Data: IntData{Data: i}}
 }
 
-func At(i bytecode.VarNum) Lexeme {
-	return Lexeme{Kind: KindAt, Data: AtData{Data: i}}
-}
-
 func Ident(s string) Lexeme {
 	return Lexeme{Kind: KindIdent, Data: IdentData{Data: s}}
 }
@@ -88,7 +82,7 @@ func Any() Lexeme {
 
 func (l Lexeme) IsOperatorLexeme() bool {
 	switch l.Kind {
-	case KindUnit, KindInt, KindAt, KindIdent:
+	case KindUnit, KindInt, KindIdent:
 		return false
 	case KindPlus, KindAsterisk, KindComma, KindEqual, KindRuleCall, KindConj, KindDisj:
 		return true
@@ -109,7 +103,7 @@ func (l Lexeme) IsValBorderLexeme() bool {
 	switch l.Kind {
 	case KindParenL, KindParenR:
 		return false
-	case KindInt, KindAt, KindUnit, KindIdent:
+	case KindInt, KindUnit, KindIdent:
 		return true
 	default:
 		panic("Unhandled lexeme")
