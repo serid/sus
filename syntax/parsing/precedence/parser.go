@@ -5,10 +5,10 @@ import (
 	"sus/stuff"
 	"sus/syntax/lexing/lexeme"
 	"sus/syntax/parsing/errors"
+	"sus/syntax/parsing/precedence/ast/propexpr"
+	"sus/syntax/parsing/precedence/ast/valexpr"
 	"sus/syntax/parsing/precedence/odesc"
 	"sus/syntax/parsing/precedence/osi"
-	"sus/syntax/parsing/precedence/propexpr"
-	"sus/syntax/parsing/precedence/valexpr"
 )
 
 // A shunting-yard operator-precedence parser

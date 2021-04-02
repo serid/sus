@@ -11,8 +11,8 @@ import (
 	"sus/syntax/lexing/lexeme"
 	"sus/syntax/parsing"
 	errors2 "sus/syntax/parsing/errors"
-	"sus/syntax/parsing/precedence/propexpr"
-	"sus/syntax/parsing/precedence/valexpr"
+	"sus/syntax/parsing/precedence/ast/propexpr"
+	"sus/syntax/parsing/precedence/ast/valexpr"
 	"testing"
 )
 
